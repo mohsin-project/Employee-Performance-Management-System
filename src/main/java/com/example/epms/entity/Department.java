@@ -1,9 +1,13 @@
 package com.example.epms.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -14,15 +18,21 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Size(max = 100)
     String name;
 
     @Column(nullable = false)
     Double budget;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    List<Employee> employees;
+    @OneToMany(mappedBy = "department")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    Set<Employee> employees;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Project> projects;
+    @OneToMany(mappedBy = "department")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    Set<Project> projects;
 }
