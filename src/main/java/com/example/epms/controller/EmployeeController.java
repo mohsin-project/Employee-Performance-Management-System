@@ -45,28 +45,42 @@ public class EmployeeController {
 
     @Transactional
     @PostMapping(EmployeeConstant.EMP_ADD)
-    public ResponseEntity<EmployeeDto> addEmployee(@Validated(ValidationGroup.Create.class) @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> addEmployee(@Validated(ValidationGroup.Create.class)
+                                                   @RequestBody
+                                                   EmployeeDto employeeDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(employeeMapper.toDto(employeeService.addEmployee(employeeDto)));
     }
 
     @Transactional
     @PutMapping(EmployeeConstant.EMP_UPDATE)
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @Validated(ValidationGroup.Update.class) @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id,
+
+                                                      @Validated(ValidationGroup.Update.class)
+                                                      @RequestBody
+                                                      EmployeeDto employeeDto) {
         return ResponseEntity.accepted()
                 .body(employeeMapper.toDto(employeeService.updateEmployee(id, employeeDto)));
     }
 
     @Transactional
     @PutMapping(EmployeeConstant.EMP_ADD_PRJS)
-    public ResponseEntity<EmployeeDto> addProjects(@PathVariable Long id, @RequestBody @NotEmpty Set<@Valid AddProjectToEmployeeDto> projects) {
+    public ResponseEntity<EmployeeDto> addProjects(@PathVariable Long id,
+
+                                                   @RequestBody
+                                                   @NotEmpty
+                                                   Set<@Valid AddProjectToEmployeeDto> projects) {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(employeeMapper.toDto(employeeProjectService.addProjectsForEmployee(id, projects)));
     }
 
     @Transactional
     @PutMapping(EmployeeConstant.EMP_REMOVE_PRJS)
-    public ResponseEntity<EmployeeDto> removeProjects(@PathVariable Long id, @RequestBody @NotEmpty Set<Long> projectIds) {
+    public ResponseEntity<EmployeeDto> removeProjects(@PathVariable Long id,
+
+                                                      @RequestBody
+                                                      @NotEmpty
+                                                      Set<Long> projectIds) {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(employeeMapper.toDto(employeeProjectService.removeProjectsFromEmployee(id, projectIds)));
     }
