@@ -13,7 +13,7 @@ This is a Spring Boot application for managing employee performance, built with 
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/mohsin-project/Employee-Performance-Management-System.git
 cd Employee-Performance-Management-System
 ```
 
