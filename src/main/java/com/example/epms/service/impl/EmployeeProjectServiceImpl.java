@@ -11,15 +11,20 @@ import com.example.epms.repository.ProjectRepository;
 import com.example.epms.service.EmployeeProjectService;
 import com.example.epms.service.EmployeeService;
 import com.example.epms.service.ProjectService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
-@Transactional
 public class EmployeeProjectServiceImpl implements EmployeeProjectService {
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     EmployeeService employeeService;
@@ -40,6 +45,8 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
     public Employee addProjectsForEmployee(Long employeeId, Set<AddProjectToEmployeeDto> projects) {
         Employee employee = employeeService.getEmployeeById(employeeId);
 
+        List<EmployeeProject> employeeProjects = new ArrayList<>();
+
         for (AddProjectToEmployeeDto dto : projects) {
             Project project = projectService.getProjectById(dto.getProjectId());
 
@@ -53,17 +60,21 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
                 employeeProject.setRole(dto.getRole());
 
 
-                employee.getEmployeeProjects().add(employeeProject);
-                project.getEmployeeProjects().add(employeeProject);
+                employeeProjects.add(employeeProject);
             }
         }
 
-        return employeeRepository.save(employee);
+        employeeProjectRepository.saveAllAndFlush(employeeProjects);
+        entityManager.refresh(employee);
+
+        return employee;
     }
 
     @Override
     public Project addEmployeesForProject(Long projectId, Set<AddEmployeeToProjectDto> employees) {
         Project project = projectService.getProjectById(projectId);
+
+        List<EmployeeProject> employeeProjects = new ArrayList<>();
 
         for (AddEmployeeToProjectDto dto : employees) {
             Employee employee = employeeService.getEmployeeById(dto.getEmployeeId());
@@ -72,16 +83,19 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
                     .anyMatch(ep -> ep.getEmployee().getId().equals(employee.getId()));
 
             if (!alreadyAssigned) {
-                EmployeeProject ep = new EmployeeProject();
-                ep.setProject(project);
-                ep.setEmployee(employee);
-                ep.setRole(dto.getRole());
+                EmployeeProject employeeProject = new EmployeeProject();
+                employeeProject.setProject(project);
+                employeeProject.setEmployee(employee);
+                employeeProject.setRole(dto.getRole());
 
-                project.getEmployeeProjects().add(ep);
-                employee.getEmployeeProjects().add(ep);
+                employeeProjects.add(employeeProject);
             }
         }
-        return projectRepository.save(project);
+
+        employeeProjectRepository.saveAllAndFlush(employeeProjects);
+        entityManager.refresh(project);
+
+        return project;
     }
 
     @Override

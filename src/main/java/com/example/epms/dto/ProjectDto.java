@@ -30,7 +30,6 @@ public class ProjectDto {
     @NotNull(groups = ValidationGroup.Create.class)
     LocalDate endDate;
 
-    @NotNull(groups = ValidationGroup.Create.class)
     Long departmentId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

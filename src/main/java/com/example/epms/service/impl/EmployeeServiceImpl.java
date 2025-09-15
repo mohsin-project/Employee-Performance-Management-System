@@ -9,12 +9,10 @@ import com.example.epms.service.DepartmentService;
 import com.example.epms.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
@@ -70,7 +68,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new NotFoundException("Manager/Employee not found with id: " + id));
 
         employeeRepository.clearManagerReferences(id);
-
         employeeRepository.delete(employee);
         return employee;
     }

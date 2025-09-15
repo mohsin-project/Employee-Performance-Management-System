@@ -19,15 +19,13 @@ public class PerformanceReviewDto {
     @NotNull(groups = ValidationGroup.Create.class)
     Long employeeId;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @PastOrPresent(groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
     LocalDate reviewDate;
 
-    @NotNull(groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
-    @Min(0)
-    @Max(100)
-    Integer score;
+    @NotNull(groups = {ValidationGroup.Create.class})
+    @DecimalMin(value = "0.0", groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
+    @DecimalMax(value = "100.0", groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
+    Double score;
 
     @NullOrNotBlank(groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
     @Size(max = 1000, message = "must not exceed {max} characters", groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})

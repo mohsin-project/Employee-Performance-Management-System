@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class DepartmentDto {
     String name;
 
     @NotNull(groups = ValidationGroup.Create.class)
+    @PositiveOrZero(groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
     Double budget;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.time.Clock;
 import java.time.LocalDate;
 
 @Data
@@ -35,7 +36,6 @@ public class EmployeeProject {
     @Column(
             name = "assigned_date",
             nullable = false,
-            insertable = false,
             updatable = false,
             columnDefinition = "DATE DEFAULT CURRENT_DATE"
     )
@@ -44,4 +44,11 @@ public class EmployeeProject {
     @Column(nullable = false)
     @Size(max = 20)
     String role;
+
+
+    @PrePersist
+    public void prePersist() {
+        if (assignedDate == null)
+            assignedDate = LocalDate.now(Clock.systemUTC());
+    }
 }

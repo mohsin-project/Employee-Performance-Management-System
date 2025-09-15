@@ -7,18 +7,21 @@ import com.example.epms.mapper.PerformanceReviewMapper;
 import com.example.epms.repository.PerformanceReviewRepository;
 import com.example.epms.service.EmployeeService;
 import com.example.epms.service.PerformanceReviewService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class PerformanceReviewServiceImpl implements PerformanceReviewService {
 
     @Autowired
     PerformanceReviewMapper performanceReviewMapper;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     PerformanceReviewRepository performanceReviewRepository;
@@ -44,7 +47,10 @@ public class PerformanceReviewServiceImpl implements PerformanceReviewService {
         PerformanceReview performanceReview = performanceReviewMapper.toEntity(performanceReviewDto);
         performanceReview.setEmployee(employeeService.getEmployeeById(performanceReviewDto.getEmployeeId()));
 
-        return performanceReviewRepository.save(performanceReview);
+        performanceReviewRepository.saveAndFlush(performanceReview);
+        entityManager.refresh(performanceReview);
+
+        return performanceReview;
     }
 
     @Override
@@ -53,7 +59,10 @@ public class PerformanceReviewServiceImpl implements PerformanceReviewService {
                 .orElseThrow(() -> new NotFoundException("Performance review not found with id: " + id));
 
         performanceReviewMapper.updateEntityFromDto(performanceReviewDto, performanceReview);
-        return performanceReviewRepository.save(performanceReview);
+        performanceReviewRepository.saveAndFlush(performanceReview);
+        entityManager.refresh(performanceReview);
+
+        return performanceReview;
     }
 
     @Override
