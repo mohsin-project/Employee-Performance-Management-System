@@ -3,13 +3,17 @@ package com.example.epms.service;
 import com.example.epms.dto.EmployeeDto;
 import com.example.epms.entity.Employee;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface EmployeeService {
 
-    List<Employee> getAllEmployees();
+    List<Employee> getAllEmployees(LocalDate reviewDate, Set<Long> departmentIds, Set<Long> projectIds);
 
-    Employee getEmployeeById(Long id);
+    Employee getDetailedEmployeeById(Long id);
+
+    EmployeeDto getEmployeeById(Long id);
 
     Employee addEmployee(EmployeeDto employeeDto);
 

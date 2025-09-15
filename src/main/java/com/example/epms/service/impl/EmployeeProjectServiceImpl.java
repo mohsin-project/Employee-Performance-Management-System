@@ -43,7 +43,7 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 
     @Override
     public Employee addProjectsForEmployee(Long employeeId, Set<AddProjectToEmployeeDto> projects) {
-        Employee employee = employeeService.getEmployeeById(employeeId);
+        Employee employee = employeeService.getDetailedEmployeeById(employeeId);
 
         List<EmployeeProject> employeeProjects = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
         List<EmployeeProject> employeeProjects = new ArrayList<>();
 
         for (AddEmployeeToProjectDto dto : employees) {
-            Employee employee = employeeService.getEmployeeById(dto.getEmployeeId());
+            Employee employee = employeeService.getDetailedEmployeeById(dto.getEmployeeId());
 
             boolean alreadyAssigned = project.getEmployeeProjects().stream()
                     .anyMatch(ep -> ep.getEmployee().getId().equals(employee.getId()));
@@ -100,7 +100,7 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 
     @Override
     public Employee removeProjectsFromEmployee(Long employeeId, Set<Long> projectIds) {
-        Employee employee = employeeService.getEmployeeById(employeeId);
+        Employee employee = employeeService.getDetailedEmployeeById(employeeId);
 
         employee.getEmployeeProjects().removeIf(ep -> projectIds.contains(ep.getProject().getId()));
         return employeeRepository.save(employee);
