@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -34,39 +35,55 @@ public class EmployeeController {
     EmployeeProjectService employeeProjectService;
 
     @GetMapping(EmployeeConstant.EMP_ALL)
-    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
-        return ResponseEntity.ok(employeeMapper.toDtoList(employeeService.getAllEmployees()));
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees(@RequestParam(required = false) LocalDate reviewDate,
+                                                             @RequestParam(name = "departmentId", required = false) Set<Long> departmentIds,
+                                                             @RequestParam(name = "projectId", required = false) Set<Long> projectIds) {
+        return ResponseEntity.ok(employeeMapper.toDtoList(employeeService.getAllEmployees(reviewDate, departmentIds, projectIds)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
-        return ResponseEntity.ok(employeeMapper.toDto(employeeService.getEmployeeById(id)));
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     @Transactional
     @PostMapping(EmployeeConstant.EMP_ADD)
-    public ResponseEntity<EmployeeDto> addEmployee(@Validated(ValidationGroup.Create.class) @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> addEmployee(@Validated(ValidationGroup.Create.class)
+                                                   @RequestBody
+                                                   EmployeeDto employeeDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(employeeMapper.toDto(employeeService.addEmployee(employeeDto)));
     }
 
     @Transactional
     @PutMapping(EmployeeConstant.EMP_UPDATE)
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @Validated(ValidationGroup.Update.class) @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id,
+
+                                                      @Validated(ValidationGroup.Update.class)
+                                                      @RequestBody
+                                                      EmployeeDto employeeDto) {
         return ResponseEntity.accepted()
                 .body(employeeMapper.toDto(employeeService.updateEmployee(id, employeeDto)));
     }
 
     @Transactional
     @PutMapping(EmployeeConstant.EMP_ADD_PRJS)
-    public ResponseEntity<EmployeeDto> addProjects(@PathVariable Long id, @RequestBody @NotEmpty Set<@Valid AddProjectToEmployeeDto> projects) {
+    public ResponseEntity<EmployeeDto> addProjects(@PathVariable Long id,
+
+                                                   @RequestBody
+                                                   @NotEmpty
+                                                   Set<@Valid AddProjectToEmployeeDto> projects) {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(employeeMapper.toDto(employeeProjectService.addProjectsForEmployee(id, projects)));
     }
 
     @Transactional
     @PutMapping(EmployeeConstant.EMP_REMOVE_PRJS)
-    public ResponseEntity<EmployeeDto> removeProjects(@PathVariable Long id, @RequestBody @NotEmpty Set<Long> projectIds) {
+    public ResponseEntity<EmployeeDto> removeProjects(@PathVariable Long id,
+
+                                                      @RequestBody
+                                                      @NotEmpty
+                                                      Set<Long> projectIds) {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(employeeMapper.toDto(employeeProjectService.removeProjectsFromEmployee(id, projectIds)));
     }

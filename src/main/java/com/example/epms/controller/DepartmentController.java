@@ -36,14 +36,20 @@ public class DepartmentController {
 
     @Transactional
     @PostMapping(DepartmentConstant.DEPT_ADD)
-    public ResponseEntity<DepartmentDto> addDepartment(@Validated(ValidationGroup.Create.class) @RequestBody DepartmentDto departmentDto) {
+    public ResponseEntity<DepartmentDto> addDepartment(@Validated(ValidationGroup.Create.class)
+                                                       @RequestBody
+                                                       DepartmentDto departmentDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(departmentMapper.toDto(departmentService.addDepartment(departmentDto)));
     }
 
     @Transactional
     @PutMapping(DepartmentConstant.DEPT_UPDATE)
-    public ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Long id, @Validated(ValidationGroup.Update.class) @RequestBody DepartmentDto departmentDto) {
+    public ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Long id,
+
+                                                          @Validated(ValidationGroup.Update.class)
+                                                          @RequestBody
+                                                          DepartmentDto departmentDto) {
         return ResponseEntity.accepted()
                 .body(departmentMapper.toDto(departmentService.updateDepartment(id, departmentDto)));
     }

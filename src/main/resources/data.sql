@@ -28,6 +28,7 @@ INSERT INTO performance_review(employee_id, review_date, score, review_comments)
 (1, '2025-09-10', 98, 'Good!'),
 (1, '2025-09-11', 99, 'Very Good!'),
 (1, '2025-09-12', 100, 'Excellent!'),
+(1, '2025-09-13', 100, 'Excellent!'),
 (2, '2025-09-10', 95, 'Good!'),
 (2, '2025-09-11', 100, 'Excellent!'),
 (3, '2025-09-10', 93, 'Good!'),

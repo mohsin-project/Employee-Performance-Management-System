@@ -45,7 +45,7 @@ public class PerformanceReviewServiceImpl implements PerformanceReviewService {
     @Override
     public PerformanceReview addPerformanceReview(PerformanceReviewDto performanceReviewDto) {
         PerformanceReview performanceReview = performanceReviewMapper.toEntity(performanceReviewDto);
-        performanceReview.setEmployee(employeeService.getEmployeeById(performanceReviewDto.getEmployeeId()));
+        performanceReview.setEmployee(employeeService.getDetailedEmployeeById(performanceReviewDto.getEmployeeId()));
 
         performanceReviewRepository.saveAndFlush(performanceReview);
         entityManager.refresh(performanceReview);

@@ -37,14 +37,20 @@ public class PerformanceReviewController {
 
     @Transactional
     @PostMapping(PerformanceReviewConstant.PERF_REVIEW_ADD)
-    public ResponseEntity<PerformanceReviewDto> addPerformanceReview(@Validated(ValidationGroup.Create.class) @RequestBody PerformanceReviewDto performanceReviewDto) {
+    public ResponseEntity<PerformanceReviewDto> addPerformanceReview(@Validated(ValidationGroup.Create.class)
+                                                                     @RequestBody
+                                                                     PerformanceReviewDto performanceReviewDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(performanceReviewMapper.toDto(performanceReviewService.addPerformanceReview(performanceReviewDto)));
     }
 
     @Transactional
     @PutMapping(PerformanceReviewConstant.PERF_REVIEW_UPDATE)
-    public ResponseEntity<PerformanceReviewDto> updatePerformanceReview(@PathVariable Long id, @Validated(ValidationGroup.Update.class) @RequestBody PerformanceReviewDto performanceReviewDto) {
+    public ResponseEntity<PerformanceReviewDto> updatePerformanceReview(@PathVariable Long id,
+
+                                                                        @Validated(ValidationGroup.Update.class)
+                                                                        @RequestBody
+                                                                        PerformanceReviewDto performanceReviewDto) {
         return ResponseEntity.accepted()
                 .body(performanceReviewMapper.toDto(performanceReviewService.updatePerformanceReview(id, performanceReviewDto)));
     }
