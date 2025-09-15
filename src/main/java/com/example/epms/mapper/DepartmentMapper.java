@@ -1,19 +1,18 @@
 package com.example.epms.mapper;
 
 import com.example.epms.dto.DepartmentDto;
+import com.example.epms.dto.EmployeeDto;
+import com.example.epms.dto.ProjectDto;
 import com.example.epms.entity.Department;
 import com.example.epms.entity.Employee;
 import com.example.epms.entity.Project;
 import org.mapstruct.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Mapper(componentModel = "spring")
 public interface DepartmentMapper extends DtoEntityMapper<DepartmentDto, Department> {
 
-    @Mapping(target = "employees", source = "employees", qualifiedByName = "mapEmployeesToIds")
-    @Mapping(target = "projects", source = "projects", qualifiedByName = "mapProjectsToIds")
+    @Mapping(target = "employees", source = "employees", qualifiedByName = "mapEmployee")
+    @Mapping(target = "projects", source = "projects", qualifiedByName = "mapProject")
     DepartmentDto toDto(Department department);
 
     @Override
@@ -27,19 +26,20 @@ public interface DepartmentMapper extends DtoEntityMapper<DepartmentDto, Departm
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDto(DepartmentDto dto, @MappingTarget Department entity);
 
-    @Named("mapEmployeesToIds")
-    default Set<Long> mapEmployeesToIds(Set<Employee> employees) {
-        if (employees == null) return null;
-        return employees.stream()
-                .map(com.example.epms.entity.Employee::getId)
-                .collect(Collectors.toSet());
+    @Named("mapEmployee")
+    default EmployeeDto.Simple mapEmployee(Employee employee) {
+        return EmployeeDto.Simple.builder()
+                .id(employee.getId())
+                .name(employee.getName())
+                .email(employee.getEmail())
+                .build();
     }
 
-    @Named("mapProjectsToIds")
-    default Set<Long> mapProjectsToIds(Set<Project> projects) {
-        if (projects == null) return null;
-        return projects.stream()
-                .map(com.example.epms.entity.Project::getId)
-                .collect(Collectors.toSet());
+    @Named("mapProject")
+    default ProjectDto.Simple mapProject(Project project) {
+        return ProjectDto.Simple.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .build();
     }
 }

@@ -10,5 +10,8 @@ public interface PerformanceReviewMapper extends DtoEntityMapper<PerformanceRevi
 
     @Override
     @Mapping(target = "employeeId", source = "employee.id")
+    @Mapping(target = "employee.id", source = "employee.id")
+    @Mapping(target = "employee.name", source = "employee.name")
+    @Mapping(target = "employee.email", source = "employee.email")
     PerformanceReviewDto toDto(PerformanceReview performanceReview);
 }

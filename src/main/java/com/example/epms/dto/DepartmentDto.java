@@ -8,7 +8,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.Set;
 
@@ -30,9 +32,16 @@ public class DepartmentDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    Set<Long> employees;
+    Set<EmployeeDto.Simple> employees;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    Set<Long> projects;
+    Set<ProjectDto.Simple> projects;
+
+    @Getter
+    @AllArgsConstructor
+    public static class Simple {
+        Long id;
+        String name;
+    }
 }

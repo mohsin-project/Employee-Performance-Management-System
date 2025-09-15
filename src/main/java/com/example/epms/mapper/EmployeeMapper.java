@@ -1,6 +1,8 @@
 package com.example.epms.mapper;
 
 import com.example.epms.dto.EmployeeDto;
+import com.example.epms.dto.PerformanceReviewDto;
+import com.example.epms.dto.ProjectDto;
 import com.example.epms.entity.Employee;
 import com.example.epms.entity.EmployeeProject;
 import com.example.epms.entity.PerformanceReview;
@@ -15,10 +17,13 @@ public interface EmployeeMapper extends DtoEntityMapper<EmployeeDto, Employee> {
 
     @Override
     @Mapping(target = "departmentId", source = "department.id")
+    @Mapping(target = "department.id", source = "department.id")
+    @Mapping(target = "department.name", source = "department.name")
     @Mapping(target = "managerId", source = "manager.id")
-    @Mapping(target = "subordinates", source = "subordinates", qualifiedByName = "mapSubordinatesToIds")
-    @Mapping(target = "performanceReviews", source = "performanceReviews", qualifiedByName = "mapPerformanceReviewsToIds")
-    @Mapping(target = "projects", source = "employeeProjects", qualifiedByName = "mapProjectsToIds")
+    @Mapping(target = "manager", source = "manager", qualifiedByName = "mapEmployee")
+    @Mapping(target = "subordinates", source = "subordinates", qualifiedByName = "mapEmployee")
+    @Mapping(target = "performanceReviews", source = "performanceReviews", qualifiedByName = "mapPerformanceReview")
+    @Mapping(target = "projects", source = "employeeProjects", qualifiedByName = "mapProject")
     EmployeeDto toDto(Employee employee);
 
     @Override
@@ -44,21 +49,32 @@ public interface EmployeeMapper extends DtoEntityMapper<EmployeeDto, Employee> {
                 .collect(Collectors.toSet());
     }
 
-
-    @Named("mapPerformanceReviewsToIds")
-    default Set<Long> mapPerformanceReviewsToIds(Set<PerformanceReview> performanceReviews) {
-        if (performanceReviews == null) return null;
-        return performanceReviews.stream()
-                .map(PerformanceReview::getId)
-                .collect(Collectors.toSet());
+    @Named("mapEmployee")
+    default EmployeeDto.Simple mapEmployee(Employee employee) {
+        if (employee == null) return null;
+        return EmployeeDto.Simple.builder()
+                .id(employee.getId())
+                .name(employee.getName())
+                .email(employee.getEmail())
+                .build();
     }
 
-    @Named("mapProjectsToIds")
-    default Set<Long> mapProjectsToIds(Set<EmployeeProject> employeeProjects) {
-        if (employeeProjects == null) return null;
-        return employeeProjects.stream()
-                .map(EmployeeProject::getProject)
-                .map(Project::getId)
-                .collect(Collectors.toSet());
+    @Named("mapPerformanceReview")
+    default PerformanceReviewDto.Simple mapPerformanceReview(PerformanceReview performanceReview) {
+        return new PerformanceReviewDto.Simple(
+                performanceReview.getId(),
+                performanceReview.getReviewDate(),
+                performanceReview.getScore(),
+                performanceReview.getReviewComments());
+    }
+
+    @Named("mapProject")
+    default ProjectDto.Simple mapProject(EmployeeProject employeeProject) {
+        Project project = employeeProject.getProject();
+        return ProjectDto.Simple.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .role(employeeProject.getRole())
+                .build();
     }
 }
